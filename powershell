@@ -1,0 +1,43 @@
+oh-my-posh --init --shell pwsh --config c:\MyPosh\larserikfinholt.omp.json | Invoke-Expression
+
+Import-Module -Name Terminal-Icons
+Import-Module PSReadLine
+
+
+try
+{
+  Set-PSReadLineOption -PredictionSource History
+  Set-PSReadLineOption -PredictionViewStyle ListView
+  Set-PSReadLineOption -EditMode Windows
+} catch
+{
+
+}
+
+function QuitReplacement
+{
+  Invoke-command -ScriptBlock {exit}
+}
+
+
+function nc { Set-Location -Path "$env:USERPROFILE\AppData\Local\nvim" }
+function nd { Set-Location -Path "$env:USERPROFILE\AppData\Local\nvim-data" }
+function re { Set-Location -Path "$env:USERPROFILE\source\repos" }
+
+
+function OpenAdminTerminal {
+    # Get the current location
+    $currentLocation = Get-Location
+
+    # Construct the argument string for Windows Terminal
+    $wtArgs = "new-tab -p `"PowerShell`" -d `"$($currentLocation.Path)`""
+
+    # Open Windows Terminal as admin with the PowerShell profile in the current location
+    Start-Process -FilePath "cmd.exe" -ArgumentList "/c start wt.exe $wtArgs" -Verb RunAs
+}
+
+
+New-Alias -Name e -Value QuitReplacement
+New-Alias -Name v -Value nvim
+New-Alias -Name c -Value clear
+New-Alias -Name ad -Value OpenAdminTerminal
