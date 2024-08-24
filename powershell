@@ -3,12 +3,33 @@ oh-my-posh --init --shell pwsh --config c:\MyPosh\larserikfinholt.omp.json | Inv
 Import-Module -Name Terminal-Icons
 Import-Module PSReadLine
 
+function OnViModeChange {
+    if ($args[0] -eq 'Command') {
+        # Set the cursor to a blinking block.
+        Write-Host -NoNewLine "`e[1 q"
+    } else {
+        # Set the cursor to a blinking line.
+        Write-Host -NoNewLine "`e[5 q"
+    }
+}
+
 
 try
 {
+  Set-PSReadLineOption -ViModeIndicator Script -ViModeChangeHandler $Function:OnViModeChange
   Set-PSReadLineOption -PredictionSource History
   Set-PSReadLineOption -PredictionViewStyle ListView
   Set-PSReadLineOption -EditMode Windows
+  Set-PSReadLineOption -Colors @{
+    Command            = 'Magenta'
+    Number             = 'Magenta'
+    Member             = 'Magenta'
+    Operator           = 'Magenta'
+    Type               = 'Magenta'
+    Variable           = 'Magenta'
+    Parameter          = 'Magenta'
+    ContinuationPrompt = 'Magenta'
+    Default            = 'Magenta'}
 } catch
 {
 
@@ -23,7 +44,26 @@ function QuitReplacement
 function nc { Set-Location -Path "$env:USERPROFILE\AppData\Local\nvim" }
 function nd { Set-Location -Path "$env:USERPROFILE\AppData\Local\nvim-data" }
 function re { Set-Location -Path "$env:USERPROFILE\source\repos" }
+function dl { Set-Location -Path "$env:USERPROFILE\Downloads" }
 
+# move last writetime in downloads folder to current directory
+function mvd {
+    $downloadsPath = [System.IO.Path]::Combine($env:USERPROFILE, "Downloads")
+    $currentDirectory = Get-Location
+
+    # Get the file with the latest LastWriteTime
+    $lastWriteFile = Get-ChildItem -Path $downloadsPath -File | 
+                     Sort-Object LastWriteTime -Descending | 
+                     Select-Object -First 1
+
+    if ($lastWriteFile) {
+        # Move the file to the current directory
+        Move-Item -Path $lastWriteFile.FullName -Destination $currentDirectory
+        Write-Host "Moved file: $($lastWriteFile.Name) to $currentDirectory"
+    } else {
+        Write-Host "No files found in the Downloads folder."
+    }
+}
 
 function OpenAdminTerminal {
     # Get the current location
@@ -41,3 +81,8 @@ New-Alias -Name e -Value QuitReplacement
 New-Alias -Name v -Value nvim
 New-Alias -Name c -Value clear
 New-Alias -Name ad -Value OpenAdminTerminal
+
+
+# Uncomment the following lines if needed
+# $env:TF_LOG="TRACE"
+# $env:TF_LOG_PATH="terraform.txt"
