@@ -1,0 +1,108 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "console_title_template": "{{ .Shell }} in {{ .Folder }}",
+  "blocks": [
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "segments": [
+        {
+          "properties": {
+            "cache_duration": "none"
+          },
+          "leading_diamond": "\ue0b6",
+          "template": " {{ .UserName }} ",
+          "foreground": "#6272a4",
+          "background": "#282a36",
+          "type": "session",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "cache_duration": "none",
+            "folder_separator_icon": " \ue0b1 ",
+            "home_icon": "~",
+            "style": "folder"
+          },
+          "template": " \uea83  {{ .Path }} ",
+          "foreground": "#8be9fd",
+          "powerline_symbol": "\ue0b0",
+          "background": "#44475a",
+          "type": "path",
+          "style": "powerline"
+        },
+        {
+          "properties": {
+            "branch_max_length": 25,
+            "cache_duration": "none",
+            "fetch_stash_count": true,
+            "fetch_status": true,
+            "fetch_upstream_icon": true
+          },
+          "template": " {{ .UpstreamIcon }}{{ .HEAD }}{{if .BranchStatus }} {{ .BranchStatus }}{{ end }}{{ if .Working.Changed }} \uf044 {{ .Working.String }}{{ end }}{{ if and (.Working.Changed) (.Staging.Changed) }} |{{ end }}{{ if .Staging.Changed }} \uf046 {{ .Staging.String }}{{ end }}{{ if gt .StashCount 0 }} \uf692 {{ .StashCount }}{{ end }} ",
+          "foreground": "#50fa7b",
+          "powerline_symbol": "\ue0b0",
+          "background": "#6272a4",
+          "type": "git",
+          "style": "powerline",
+          "background_templates": [
+            "{{ if or (.Working.Changed) (.Staging.Changed) }}#6a5acd{{ end }}",
+            "{{ if and (gt .Ahead 0) (gt .Behind 0) }}#6a5acd{{ end }}",
+            "{{ if gt .Ahead 0 }}#8be9fd{{ end }}",
+            "{{ if gt .Behind 0 }}#8be9fd{{ end }}"
+          ]
+        },
+        {
+          "properties": {
+            "always_enabled": true,
+            "cache_duration": "none"
+          },
+          "template": " {{ .FormattedMs }}\u2800",
+          "foreground": "#f1fa8c",
+          "background": "#282a36",
+          "type": "executiontime",
+          "style": "diamond"
+        },
+        {
+          "properties": {
+            "access_token": "0ccbd2ac1e37a5b84101468df3d367177fe02ab3",
+            "cache_duration": "none",
+            "http_timeout": 1500,
+            "refresh_token": "111111111111111111111111111111"
+          },
+          "template": " {{.Name}} {{.Ago}} {{.Icon}} ",
+          "foreground": "#6a5acd",
+          "background": "#44475a",
+          "type": "strava",
+          "style": "powerline",
+          "foreground_templates": [
+            "{{ if gt .Hours 100 }}#8be9fd{{ end }}",
+            "{{ if and (lt .Hours 100) (gt .Hours 50) }}#8be9fd{{ end }}",
+            "{{ if lt .Hours 50 }}#8be9fd{{ end }}"
+          ],
+          "background_templates": [
+            "{{ if gt .Hours 100 }}#6a5acd{{ end }}",
+            "{{ if and (lt .Hours 100) (gt .Hours 50) }}#6a5acd{{ end }}",
+            "{{ if lt .Hours 50 }}#6a5acd{{ end }}"
+          ]
+        },
+        {
+          "properties": {
+            "always_enabled": true,
+            "cache_duration": "none"
+          },
+          "trailing_diamond": "\ue0b4",
+          "template": "<parentBackground>\ue0b0</> \ue23a ",
+          "background": "#282a36",
+          "type": "exit",
+          "style": "diamond",
+          "foreground_templates": [
+            "{{ if eq .Code 0 }}#00ff00{{ else }}#ff5555{{ end }}"
+          ]
+        }
+      ]
+    }
+  ],
+  "version": 3,
+  "final_space": true
+}
